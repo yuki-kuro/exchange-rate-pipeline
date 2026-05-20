@@ -1,0 +1,8 @@
+# STEP 1 で仮想環境に pip install 後、`pip freeze` でバージョンを固定する予定
+requests
+pandas
+SQLAlchemy
+PyMySQL
+matplotlib
+pytest
+python-dotenv
