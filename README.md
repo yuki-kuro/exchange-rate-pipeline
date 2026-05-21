@@ -35,13 +35,25 @@ Extract → Transform → 品質チェック → Load(raw) → 集計 → 出力
 
 | STEP | 内容 | 状況 |
 |---|---|---|
-| 1 | 基盤整備（構成・requirements） | 🚧 着手中 |
-| 2 | Extract（API取得） | ⬜ 未着手 |
+| 1 | 基盤整備（構成・requirements） | ✅ 完了 |
+| 2 | Extract（API取得） | ✅ 完了 |
 | 3 | Transform + 品質チェック | ⬜ 未着手 |
 | 4 | Load（MySQL保存） | ⬜ 未着手 |
 | 5 | 集計 | ⬜ 未着手 |
 | 6 | 出力 + バッチ統合 | ⬜ 未着手 |
 | 7 | テスト + ドキュメント | ⬜ 未着手 |
+
+## 動作例
+
+### Frankfurter API のレスポンス
+ブラウザで `https://api.frankfurter.dev/v2/rates` にアクセスした結果。
+
+![Frankfurter API のレスポンス](docs/images/api_response.png)
+
+### Extract の実行結果（STEP 2）
+`extract.py` を実行し、為替レートを JSON配列で取得できたところ。
+
+![extract.py の実行結果](docs/images/extract_run.png)
 
 ## ドキュメント
 
