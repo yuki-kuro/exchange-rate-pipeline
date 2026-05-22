@@ -37,7 +37,7 @@ Extract → Transform → 品質チェック → Load(raw) → 集計 → 出力
 |---|---|---|
 | 1 | 基盤整備（構成・requirements） | ✅ 完了 |
 | 2 | Extract（API取得） | ✅ 完了 |
-| 3 | Transform + 品質チェック | ⬜ 未着手 |
+| 3 | Transform + 品質チェック | ✅ 完了 |
 | 4 | Load（MySQL保存） | ⬜ 未着手 |
 | 5 | 集計 | ⬜ 未着手 |
 | 6 | 出力 + バッチ統合 | ⬜ 未着手 |
@@ -54,6 +54,16 @@ Extract → Transform → 品質チェック → Load(raw) → 集計 → 出力
 `extract.py` を実行し、為替レートを JSON配列で取得できたところ。
 
 ![extract.py の実行結果](docs/images/extract_run.png)
+
+### Transform の実行結果（STEP 3）
+`transform.py` を実行し、整形した結果。
+
+![transform.py の実行結果](docs/images/transform_run.png)
+
+### Quality の実行結果（STEP 3）
+テストデータで`quality.py` を実行し、クレンジングした結果。
+
+![quality.py の実行結果](docs/images/quality_run.png)
 
 ## ドキュメント
 
