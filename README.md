@@ -62,7 +62,7 @@ Extract → Transform → 品質チェック → Load(raw) → 集計 → 出力
 | 1 | 基盤整備（構成・requirements） | ✅ 完了 |
 | 2 | Extract（API取得） | ✅ 完了 |
 | 3 | Transform + 品質チェック | ✅ 完了 |
-| 4 | Load（MySQL保存） | ⬜ 未着手 |
+| 4 | Load（MySQL保存） | ✅ 完了 |
 | 5 | 集計 | ⬜ 未着手 |
 | 6 | 出力 + バッチ統合 | ⬜ 未着手 |
 | 7 | テスト + ドキュメント | ⬜ 未着手 |
@@ -88,6 +88,15 @@ Extract → Transform → 品質チェック → Load(raw) → 集計 → 出力
 テストデータで`quality.py` を実行し、クレンジングした結果。
 
 ![quality.py の実行結果](docs/images/quality_run.png)
+
+### Load の実行結果（STEP 4）
+`load.py` を2回連続で実行した結果。1回目は全件が新規登録、2回目は同じデータのため全件が更新となり、冪等性を確認できる。
+
+![load.py の実行結果](docs/images/load_run.png)
+
+実際に `raw_rates` テーブルへ蓄積されたデータ（A5:SQL Mk-2 で `SELECT`）。
+
+![raw_rates テーブルの中身](docs/images/raw_rates_select.png)
 
 ## ドキュメント
 
