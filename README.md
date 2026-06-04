@@ -53,6 +53,31 @@ Extract → Transform → 品質チェック → Load(raw) → 集計 → 出力
 - **DECIMAL の採用**: 金融計算で使われる小数値は、FLOATやDOUBLEだと誤差が出るためDECIMALを採用する。桁数(18,6)は為替レートで使われる標準的な桁数。
 - **CHAR(3) の採用**: base/quoteはISO 4217に準拠した通貨コード。3文字固定であることが保証されているため、固定長のCHAR(3)型を採用
 
+### 集計層 `agg_rates`
+
+`raw_rates` から派生させ、前日比・移動平均などの集計値を蓄積する `agg_rates` テーブルの構成です。
+
+| カラム | 型 | 制約・説明 |
+|---|---|---|
+| id | INT | 主キー・連番 |
+| date | DATE | レートの日付 |
+| base | CHAR(3) | 基準通貨 |
+| quote | CHAR(3) | 相手通貨 |
+| rate | DECIMAL(18,6) | その日のレート（raw_rates から複製） |
+| diff_prev | DECIMAL(18,6) | 前日比（差）。系列初日は NULL |
+| pct_change | DECIMAL(9,6) | 前日比（変化率, %）。系列初日は NULL |
+| ma_7 | DECIMAL(18,6) | 7日移動平均。最初の6日は NULL |
+| created_at | DATETIME | 算出日時 |
+
+- 指標列（diff_prev / pct_change / ma_7）以外は NOT NULL
+- `(date, base, quote)` に UNIQUE 制約
+
+#### 集計層の設計ポイント
+
+- **raw 層との分離**: 生データ（raw）は不変で保持し、加工結果は別テーブルに分ける。集計ロジックを変えて再計算したいとき、raw を壊さず agg_rates だけ作り直せる
+- **指標列の NULL 許容**: 系列初日の前日比・最初の6日の移動平均は「まだ計算できない」値のため NULL とする。DEFAULT 0 にすると「変化なし」と区別がつかないため設定しない
+- **rate の複製（非正規化）**: 出力工程で join 不要にし、agg_rates 単体でレートと集計値を並べて見られるようにする
+
 ## 実装ロードマップ
 
 各STEPで「動く成果物」が残るように分割しています。
