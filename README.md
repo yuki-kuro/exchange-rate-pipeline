@@ -88,7 +88,7 @@ Extract → Transform → 品質チェック → Load(raw) → 集計 → 出力
 | 2 | Extract（API取得） | ✅ 完了 |
 | 3 | Transform + 品質チェック | ✅ 完了 |
 | 4 | Load（MySQL保存） | ✅ 完了 |
-| 5 | 集計 | ⬜ 未着手 |
+| 5 | 集計 | ✅ 完了 |
 | 6 | 出力 + バッチ統合 | ⬜ 未着手 |
 | 7 | テスト + ドキュメント | ⬜ 未着手 |
 
@@ -122,6 +122,15 @@ Extract → Transform → 品質チェック → Load(raw) → 集計 → 出力
 実際に `raw_rates` テーブルへ蓄積されたデータ（A5:SQL Mk-2 で `SELECT`）。
 
 ![raw_rates テーブルの中身](docs/images/raw_rates_select.png)
+
+### Aggregate の実行結果（STEP 5）
+`aggregate.py` を実行し、`raw_rates` から前日比・7日移動平均を計算して `agg_rates` へ保存した結果。再実行すると全件が更新となり、冪等性を確認できる。
+
+![aggregate.py の実行結果](docs/images/aggregate_run.png)
+
+実際に `agg_rates` テーブルへ蓄積された集計データ（A5:SQL Mk-2 で `SELECT`）。`diff_prev`（前日比）・`pct_change`（変化率%）・`ma_7`（7日移動平均）が計算される。
+
+![agg_rates テーブルの中身](docs/images/agg_rates_select.png)
 
 ## ドキュメント
 
