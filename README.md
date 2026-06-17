@@ -125,6 +125,21 @@ Extract → Transform → 品質チェック → Load(raw) → 集計 → 出力
 
 ![agg_rates テーブルの中身](docs/images/agg_rates_select.png)
 
+### パイプライン全体の実行結果（STEP 6）
+`main.py` を実行し、Extract→Transform→品質チェック→Load→集計→出力 を一気通貫で実行した結果。各工程の進行と件数がログに出力され、`data/` に集計 CSV とグラフ PNG が出力される。
+
+```
+2026-06-16 13:32:54 [INFO] -----パイプライン開始-----
+2026-06-16 13:32:54 [INFO] Extract 完了: レート取得
+2026-06-16 13:32:54 [INFO] Transform 完了: 164件
+2026-06-16 13:32:54 [INFO] 品質チェック 完了: 164件（除外 0件）
+2026-06-16 13:32:54 [INFO] Load 完了: 新規0 更新164
+2026-06-16 13:32:54 [INFO] 集計 完了: 新規0 更新492
+2026-06-16 13:32:54 [INFO] 件数:6, パス:data\agg_rates.csv
+2026-06-16 13:32:55 [INFO] パス:data\rates.png
+2026-06-16 13:32:55 [INFO] -----パイプライン完了-----
+```
+
 ## ドキュメント
 
 - [設計ドキュメント (docs/design.md)](docs/design.md) — 背景・技術選定理由・アーキテクチャ・STEP分解
@@ -144,4 +159,28 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-※ 実行方法は実装の進行に応じて追記します。
+## 実行
+
+### 手動実行
+```powershell
+.\.venv\Scripts\Activate.ps1
+python main.py
+```
+`main.py` が Extract→Transform→品質チェック→Load→集計→出力 を順に実行し、`data/` に集計 CSV とグラフ PNG を出力します。
+
+### 毎日自動実行（Windows タスクスケジューラ）
+venv の Python を作業ディレクトリ固定で呼ぶため、起動用バッチを用意します。
+
+**1. `run_pipeline.bat` をプロジェクト直下に作成**
+```bat
+@echo off
+cd /d C:\portfolio\exchange-rate-pipeline
+.\.venv\Scripts\python.exe main.py
+```
+
+**2. タスクを登録**（管理者 PowerShell）
+```powershell
+schtasks /Create /SC DAILY /TN "ExchangeRatePipeline" /TR "C:\portfolio\exchange-rate-pipeline\run_pipeline.bat" /ST 09:00
+```
+
+Frankfurter API は平日 16:00 CET 頃に更新されるため、翌朝（例: 09:00 JST）の実行で前営業日の最新レートを取り込めます。UPSERT により再実行しても重複しません（冪等）。
